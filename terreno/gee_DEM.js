@@ -1,4 +1,4 @@
-ee.ImageCollection("COPERNICUS/S2")
+ee.ImageCollection("COPERNICUS/DEM/GLO3")
 
 //should be define the geometry by the user.
 
