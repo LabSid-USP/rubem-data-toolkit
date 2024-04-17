@@ -1,3 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-48.191953460487625, -22.778062290756594],
+          [-48.191953460487625, -23.947960284540397],
+          [-46.697812835487625, -23.947960284540397],
+          [-46.697812835487625, -22.778062290756594]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 ee.ImageCollection("COPERNICUS/DEM/GLO30")
 
 //should be define the geometry by the user.
@@ -7,7 +21,7 @@ ee.ImageCollection("COPERNICUS/DEM/GLO30")
 
 // GENERAL CONFIGURATION
 // select the area of interest
-var area = 'geometry'
+var area = 'geometry';
 
 // specify the start and end  date
 var start = '2008-01-01';
@@ -17,7 +31,7 @@ print("Start Date: ", start);
 print("End Date: ", end);
 
 // external 
-var batch = require('users/fitoprincipe/geetools:batch')
+var batch = require('users/fitoprincipe/geetools:batch');
 var palettesGeneral = require('users/gena/packages:palettes');
 
 ////////////////////////////////////////////////////////
@@ -34,13 +48,13 @@ var visDem = {
   palette: palette
 };
 // center the map
-Map.centerObject(geometry, 15)
+Map.centerObject(geometry, 15);
 
 // add Geometry to map
-Map.addLayer(geometry, {}, 'Geometry')
+Map.addLayer(geometry, {}, 'Geometry');
 
 // export DEM to drive
-var exportDem = clippedDem.select('elevation')
+var exportDem = clippedDem.select('elevation');
 Export.image.toDrive({
     image: exportDem,
     description: 'demFile',
@@ -49,7 +63,7 @@ Export.image.toDrive({
     region: geometry,
     scale: 30,
     maxPixels: 2e10
-})
+});
 // add DEM to map
 Map.addLayer(clippedDem, visDem, 'DEM');
 
@@ -84,13 +98,13 @@ var labels = ui.Panel({
 var legendPanel = ui.Panel({
   widgets: [title, legend, labels],
   style: {position: 'bottom-center', padding: '8px 15px'}
-})
-return legendPanel
+});
+return legendPanel;
 }
 
 // Call the function to create a colorbar legend  
-var colorBar = createColorBar('Digital Elevation Model (m)', palette, 0, 2000)
+var colorBar = createColorBar('Digital Elevation Model (m)', palette, 0, 2000);
 
-Map.add(colorBar)
+Map.add(colorBar);
 
 // William Vichete
