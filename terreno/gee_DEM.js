@@ -12,7 +12,7 @@ var geometry =
           [-46.697812835487625, -23.947960284540397],
           [-46.697812835487625, -22.778062290756594]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-ee.ImageCollection("COPERNICUS/DEM/GLO30")
+ee.ImageCollection("COPERNICUS/DEM/GLO30");
 
 //should be define the geometry by the user.
 
