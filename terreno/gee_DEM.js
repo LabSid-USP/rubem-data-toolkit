@@ -14,7 +14,7 @@ ee.ImageCollection("COPERNICUS/DEM/GLO30");
 
 // GENERAL CONFIGURATION
 // select the area of interest
-var area = 'geometry'
+var area = 'geometry';
 
 // specify the start and end  date
 var start = '2008-01-01';
