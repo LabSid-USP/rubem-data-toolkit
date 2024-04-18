@@ -1,3 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-107.32890625, 40.43415242959552],
+          [-107.32890625, 38.05215559835963],
+          [-104.16484375, 38.05215559835963],
+          [-104.16484375, 40.43415242959552]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Criar painéis para entrada de dados
 var panelMain = ui.Panel({
     'layout': ui.Panel.Layout.flow('vertical'),
@@ -41,7 +55,7 @@ var panelMain = ui.Panel({
     };
 
     // Criar a tarefa de exportação
-    var task = ee.batch.Export.image.toDrive(exportOptions);
+    var task = ee.Export.image.toDrive(exportOptions);
 
     // Iniciar a tarefa
     task.start();
