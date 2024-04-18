@@ -1,12 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #98ff00 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
+var geometry = /* color: #98ff00 */ee.Geometry.Polygon(
         [[[-48.191953460487625, -22.778062290756594],
           [-48.191953460487625, -23.947960284540397],
           [-46.697812835487625, -23.947960284540397],
@@ -21,7 +14,7 @@ ee.ImageCollection("COPERNICUS/DEM/GLO30");
 
 // GENERAL CONFIGURATION
 // select the area of interest
-var area = 'geometry';
+var area = 'geometry'
 
 // specify the start and end  date
 var start = '2008-01-01';
