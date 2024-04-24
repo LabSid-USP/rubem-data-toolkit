@@ -29,7 +29,7 @@ var panelMain = ui.Panel({
   geometryPanel.add(ui.Label('Desenhe o polígono desejado na área do mapa e nomeie a camada como `geometry`.'));
   
   collectionPanel.add(ui.Label('Selecione a coleção:'));
-  collectionPanel.add(ui.Select({items: ['COPERNICUS/DEM/GLO30']}));
+  collectionPanel.add(ui.Select({items: ['USGS/SRTMGL1_003']}));
   
   // Adicionar painéis à interface do usuário
   panelMain.add(geometryPanel);
@@ -41,24 +41,23 @@ var panelMain = ui.Panel({
     var collectionName = collectionPanel.widgets().get(1).getValue();    
 
     // Selecionar o conjunto de dados
-    var dataset = ee.ImageCollection(collectionName).select('DEM');
+    var dataset = ee.Image(collectionName).select('elevation');
+    var clippedDem = dataset.clip(geometry);
     
     // Definir as opções de exportação
     var exportOptions = {
-    image: dataset,
+    image: clippedDem,
     description: 'DEM',
     region: geometry,
-    folder: 'DEM',
+    folder: 'RUBEM_DATA_TOOLKIT',
     fileFormat: 'GeoTIFF',
+    fileNamePrefix: 'demFile',
     scale: 30,
     maxPixels: 2e10
     };
 
     // Criar a tarefa de exportação
-    var task = ee.Export.image.toDrive(exportOptions);
-
-    // Iniciar a tarefa
-    task.start();
+    Export.image.toDrive(exportOptions);
   };
   
   // Adicionar um botão para iniciar o download
