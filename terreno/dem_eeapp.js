@@ -12,6 +12,17 @@ var geometry =
           [-104.16484375, 38.05215559835963],
           [-104.16484375, 40.43415242959552]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// centralizar e adicionar o mapa na área de interesse
+Map.centerObject(geometry);
+var hydro = ee.FeatureCollection('WWF/HydroSHEDS/v1/Basins/hybas_5');
+var visualization = {
+  color: '00FFFF',
+  strokeWidth: 5
+};
+Map.addLayer(hydro, visualization, 'Basins')
+Map.addLayer(geometry, {color: 'FF0000'}, 'Geometry');
+
+
 // Criar painéis para entrada de dados
 var panelMain = ui.Panel({
     'layout': ui.Panel.Layout.flow('vertical'),
@@ -26,10 +37,14 @@ var panelMain = ui.Panel({
   var collectionPanel = ui.Panel();
   
   // Adicionar widgets para entrada de dados
-  geometryPanel.add(ui.Label('Desenhe o polígono desejado na área do mapa e nomeie a camada como `geometry`.'));
+  geometryPanel.add(ui.Label('RUBEM TOOLKIT: TERRENO - DEM'));
   
-  collectionPanel.add(ui.Label('Selecione a coleção:'));
-  collectionPanel.add(ui.Select({items: ['USGS/SRTMGL1_003']}));
+  geometryPanel.add(ui.Label('Portugues: Desenhe ou insira uma área da aba assets e renomei a variavel `table´ para `geometry´'));
+  
+  geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
+   
+  collectionPanel.add(ui.Label('Selecione o sensor (select the sensor):'));
+  collectionPanel.add(ui.Select({items: ['COPERNICUS/DEM/GLO30']}));
   
   // Adicionar painéis à interface do usuário
   panelMain.add(geometryPanel);
@@ -40,20 +55,21 @@ var panelMain = ui.Panel({
     // Obter os valores de entrada
     var collectionName = collectionPanel.widgets().get(1).getValue();    
 
-    // Selecionar o conjunto de dados
-    var dataset = ee.Image(collectionName).select('elevation');
-    var clippedDem = dataset.clip(geometry);
+    var dataset = ee.ImageCollection(collectionName);
+    var filtered = dataset.filter(ee.Filter.bounds(geometry)).select('DEM');
+    var image = filtered.reduce(ee.Reducer.max());
+    var clipped = image.clip(geometry);
     
     // Definir as opções de exportação
     var exportOptions = {
-    image: clippedDem,
-    description: 'DEM',
-    region: geometry,
-    folder: 'RUBEM_DATA_TOOLKIT',
-    fileFormat: 'GeoTIFF',
-    fileNamePrefix: 'demFile',
-    scale: 30,
-    maxPixels: 2e10
+      image: clipped,
+      description: 'DEM',
+      region: geometry,
+      folder: 'RUBEM_DATA_TOOLKIT',
+      fileFormat: 'GeoTIFF',
+      fileNamePrefix: 'demFile',
+      scale: 30,
+      maxPixels: 2e10
     };
 
     // Criar a tarefa de exportação
