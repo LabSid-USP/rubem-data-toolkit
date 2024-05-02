@@ -12,7 +12,7 @@ var geometry =
           [-104.16484375, 38.05215559835963],
           [-104.16484375, 40.43415242959552]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// centralizar e adicionar o mapa na área de interesse
+// centralizar e adicionar o mapa na área de interesse 
 Map.centerObject(geometry);
 var hydro = ee.FeatureCollection('WWF/HydroSHEDS/v1/Basins/hybas_5');
 var visualization = {
