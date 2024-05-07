@@ -64,10 +64,7 @@ filtered.map(function(image) {
   };
 
   // Criar a tarefa de exportação
-  var task = ee.batch.Export.image.toDrive(exportOptions);
-
-  // Iniciar a tarefa
-  task.start();
+  Export.image.toDrive(exportOptions);
 });
 };
 
