@@ -1,9 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: #98ff00 */ee.Geometry.Polygon(
-        [[[-35.00136814102365, -7.850571957561979],
-          [-35.00136814102365, -8.13344186042875],
-          [-34.81460056289865, -8.13344186042875],
-          [-34.81460056289865, -7.850571957561979]]], null, false);
+        [[[-36.16591892227365, -7.940349945935392],
+          [-36.7784067152424, -8.378072385937918],
+          [-36.36779270157052, -8.919782359555366],
+          [-35.56167087539865, -8.397092817389273],
+          [-34.96291599258615, -8.39980994584636],
+          [-34.78713474258615, -7.883220754882507],
+          [-34.84206638321115, -7.6614308783273755]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var batch = require('users/fitoprincipe/geetools:batch')
 var palettesGeneral = require('users/gena/packages:palettes');
@@ -51,6 +54,51 @@ var ndviVis = {
   palette: palette,
 };
 
+// Add bar Legend
+function createColorBar(titleText, palette, min, max) {
+// Legend Title
+var title = ui.Label({
+  value: titleText, 
+  style: {
+    fontWeight: 'bold', 
+    textAlign: 'center', 
+    stretch: 'horizontal'
+  }
+});
+
+// Colorbar
+var legend = ui.Thumbnail({
+  image: ee.Image.pixelLonLat().select(0),
+  params: {
+    bbox: [0, 0, 1, 0.1],
+    dimensions: '200x20',
+    format: 'png', 
+    min: 0, max: 1,
+    palette: palette
+  },
+  style: {stretch: 'horizontal', margin: '8px 8px', maxHeight: '40px'},
+});
+  
+// Legend Labels
+var labels = ui.Panel({
+  widgets: [
+    ui.Label(min, {margin: '4px 10px',textAlign: 'left', stretch: 'horizontal'}),
+    ui.Label((min+max)/2, {margin: '4px 20px', textAlign: 'center', stretch: 'horizontal'}),
+    ui.Label(max, {margin: '4px 10px',textAlign: 'right', stretch: 'horizontal'})],
+  layout: ui.Panel.Layout.flow('horizontal')});
+  
+// Create a panel with all 3 widgets
+var legendPanel = ui.Panel({
+  widgets: [title, legend, labels],
+  style: {position: 'bottom-center', padding: '8px 15px'}
+})
+return legendPanel
+}
+
+// Call the function to create a colorbar legend  
+var colorBar = createColorBar('NDVI - First Image ', palette, 0, 1)
+
+Map.add(colorBar)
 
 // Create function with filter of quality pixels
 var mask = function(im) {
@@ -159,52 +207,6 @@ var downloadTasks = function() {
   
   // add the first NDVI image to map
   Map.addLayer(clippedNdvi, ndviVis, 'NDVI');
-  
-  // Add bar Legend
-  function createColorBar(titleText, palette, min, max) {
-  // Legend Title
-  var title = ui.Label({
-    value: titleText, 
-    style: {
-      fontWeight: 'bold', 
-      textAlign: 'center', 
-      stretch: 'horizontal'
-    }
-  });
-  
-  // Colorbar
-  var legend = ui.Thumbnail({
-    image: ee.Image.pixelLonLat().select(0),
-    params: {
-      bbox: [0, 0, 1, 0.1],
-      dimensions: '200x20',
-      format: 'png', 
-      min: 0, max: 1,
-      palette: palette
-    },
-    style: {stretch: 'horizontal', margin: '8px 8px', maxHeight: '40px'},
-  });
-    
-  // Legend Labels
-  var labels = ui.Panel({
-    widgets: [
-      ui.Label(min, {margin: '4px 10px',textAlign: 'left', stretch: 'horizontal'}),
-      ui.Label((min+max)/2, {margin: '4px 20px', textAlign: 'center', stretch: 'horizontal'}),
-      ui.Label(max, {margin: '4px 10px',textAlign: 'right', stretch: 'horizontal'})],
-    layout: ui.Panel.Layout.flow('horizontal')});
-    
-  // Create a panel with all 3 widgets
-  var legendPanel = ui.Panel({
-    widgets: [title, legend, labels],
-    style: {position: 'bottom-center', padding: '8px 15px'}
-  })
-  return legendPanel
-  }
-  
-  // Call the function to create a colorbar legend  
-  var colorBar = createColorBar('NDVI - First Image ', palette, 0, 1)
-  
-  Map.add(colorBar)
 };
 
 // Adicionar um botão para iniciar o download
