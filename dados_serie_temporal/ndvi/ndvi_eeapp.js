@@ -30,7 +30,7 @@ datePanel.add(ui.Label('Digite a data final:'));
 datePanel.add(ui.Textbox());
 
 collectionPanel.add(ui.Label('Selecione a coleção:'));
-collectionPanel.add(ui.Select({items: ['MODIS/061/MOD13A1']}));
+collectionPanel.add(ui.Select({items: ['MODIS/061/MOD13Q1']}));
 
 // Adicionar painéis à interface do usuário
 panelMain.add(geometryPanel);
@@ -51,6 +51,26 @@ var ndviVis = {
   palette: palette,
 };
 
+
+// Create function with filter of quality pixels
+var mask = function(im) {
+  return im.updateMask(im.select("SummaryQA").eq(0));
+};
+
+// This function sets the starting position for the bit and the number of
+// positions necessary.
+var GetQABits = function(image, bitStart, numBits){
+    var bitmapped = image.select('DetailedQA').rightShift(bitStart).mod(Math.pow(2, numBits));
+    return bitmapped;
+};
+
+var MaskToBestBits = function(image){
+  var detailqa = image.select('DetailedQA');
+  var VIQual = GetQABits(detailqa, 0, 1);
+  return image.addBands(detailqa)
+    .updateMask(VIQual.lt(2)) 
+};
+
 // Definir a função de download
 var downloadTasks = function() {
   // Obter os valores de entrada
@@ -68,11 +88,12 @@ var downloadTasks = function() {
     .filter(ee.Filter.date(startDate, endDate));
   
   // Scaled range up to 1
-  var modisNDVI = dataset.select('NDVI');
+  var modisNDVI = dataset.select('NDVI', 'SummaryQA', 'DetailedQA')
+    .map(MaskToBestBits);
   var scaledNDVI = modisNDVI.map(function(image){
     return image.multiply(0.0001)
     .copyProperties(image,['system:time_start','system:time_end']);
-  });
+  }).select('NDVI');
   
   var triplets = scaledNDVI.map(function(image) {
     var withStats = image.reduceRegions({
@@ -106,23 +127,23 @@ var downloadTasks = function() {
   // Plotting chart of monthly Rainfall
   var title = 'Mean Monthly NDVI of Geometry';
   
-  // var timeSeries = ui.Chart.image.seriesByRegion({
-  //     imageCollection: clippedNdvi,
-  //     regions: geometry,
-  //     reducer: ee.Reducer.mean(),
-  //     scale: 250,
-  //     xProperty: 'system:time_start',
-  //     seriesProperty: 'label'
-  //   }).setChartType('ScatterChart')
-  //     .setOptions({
-  //       title: title,
-  //       vAxis: {title: '[NDVI]'},
-  //       hAxis: {title: 'Year'},
-  //       lineWidth: 1,
-  //       pointSize: 1,
-  //     });
+  var timeSeries = ui.Chart.image.seriesByRegion({
+      imageCollection: clippedNdvi,
+      regions: geometry,
+      reducer: ee.Reducer.mean(),
+      scale: 250,
+      xProperty: 'system:time_start',
+      seriesProperty: 'label'
+    }).setChartType('ScatterChart')
+      .setOptions({
+        title: title,
+        vAxis: {title: '[NDVI]'},
+        hAxis: {title: 'Year'},
+        lineWidth: 1,
+        pointSize: 1,
+      });
   
-  // print(timeSeries);
+  print(timeSeries);
     
   // Download images for a set region
   batch.Download.ImageCollection.toDrive(clippedNdvi, 'RUBEM_DATA_TOOLKIT_NDVI', 
