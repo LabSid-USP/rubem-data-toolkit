@@ -96,7 +96,7 @@ return legendPanel
 }
 
 // Call the function to create a colorbar legend  
-var colorBar = createColorBar('NDVI - First Image ', palette, 0, 1)
+var colorBar = createColorBar('NDVI', palette, 0, 1)
 
 Map.add(colorBar)
 
