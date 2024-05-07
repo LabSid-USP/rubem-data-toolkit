@@ -1,16 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = 
-    /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
+    /* color: #98ff00 */
+    /* shown: false */
     ee.Geometry.Polygon(
-        [[[-106.9333984375, 38.33996129477109],
-          [-106.9333984375, 37.71688095044312],
-          [-106.1423828125, 37.71688095044312],
-          [-106.1423828125, 38.33996129477109]]], null, false);
+        [[[-35.00136814102365, -7.850571957561979],
+          [-35.00136814102365, -8.13344186042875],
+          [-34.81460056289865, -8.13344186042875],
+          [-34.81460056289865, -7.850571957561979]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var batch = require('users/fitoprincipe/geetools:batch')
 var palettesGeneral = require('users/gena/packages:palettes');
@@ -61,8 +57,8 @@ var ndviVis = {
 // Definir a função de download
 var downloadTasks = function() {
   // Obter os valores de entrada
-  var startDate = datePanel.widgets().get(1).getValue();
-  var endDate = datePanel.widgets().get(3).getValue();
+  var startDate = ee.Date(datePanel.widgets().get(1).getValue());
+  var endDate = ee.Date(datePanel.widgets().get(3).getValue());
   var collectionName = collectionPanel.widgets().get(1).getValue();
   
   // Selecionar o conjunto de dados
@@ -140,6 +136,7 @@ var downloadTasks = function() {
       description: 'imageToDriveExample',
       scale: 250,
       fileFormat: 'GeoTIFF',
+      
     }
   );
   
