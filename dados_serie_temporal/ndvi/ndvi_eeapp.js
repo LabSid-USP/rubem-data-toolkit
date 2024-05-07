@@ -1,8 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #98ff00 */
-    /* shown: false */
-    ee.Geometry.Polygon(
+var geometry = /* color: #98ff00 */ee.Geometry.Polygon(
         [[[-35.00136814102365, -7.850571957561979],
           [-35.00136814102365, -8.13344186042875],
           [-34.81460056289865, -8.13344186042875],
@@ -128,7 +125,7 @@ var downloadTasks = function() {
   // print(timeSeries);
     
   // Download images for a set region
-  batch.Download.ImageCollection.toDrive(clippedNdvi, 'NDVI', 
+  batch.Download.ImageCollection.toDrive(clippedNdvi, 'RUBEM_DATA_TOOLKIT_NDVI', 
     {
       region: clippedNdvi,
       crs: 'EPSG:4326',
@@ -136,7 +133,6 @@ var downloadTasks = function() {
       description: 'imageToDriveExample',
       scale: 250,
       fileFormat: 'GeoTIFF',
-      
     }
   );
   
