@@ -1,3 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-42.518978289589725, -9.26849628808742],
+          [-42.518978289589725, -10.572524341396372],
+          [-40.805111102089725, -10.572524341396372],
+          [-40.805111102089725, -9.26849628808742]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var batch = require('users/fitoprincipe/geetools:batch')
 var palettesGeneral = require('users/gena/packages:palettes');
 
