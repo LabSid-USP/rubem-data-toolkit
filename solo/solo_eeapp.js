@@ -35,33 +35,35 @@ var panelMain = ui.Panel({
   
   var availableProperties = {
     'Fine Sand': {
-      description: '',
-      fileNamePrefix: '',
+      description: 'fine_sand',
+      fileNamePrefix: 'fine_sand',
       asset: raster_areiaf
     },
     'Coarse Sand': {
-      description: '',
-      fileNamePrefix: '',      
+      description: 'coarse_sand',
+      fileNamePrefix: 'coarse_sand',      
       asset: raster_areiag
     },
     'Hydraulic Conductivity': {
-      description: '',
-      fileNamePrefix: '',      
+      description: 'hydraulic_conductivity',
+      fileNamePrefix: 'hydraulic_conductivity',      
       asset: raster_kr
     }
   };
   
   var clippedImage; 
+  var selectedProperty;
   propertiesPanel.add(ui.Label('Propriedade do Solo'));
   propertiesPanel.add(ui.Select(
     {
       items: Object.keys(availableProperties),
       placeholder: 'Selecione a propriedade',
-      onChange: function(selectedProperty){
-        var selectedImage = availableProperties[selectedProperty]['asset'];
+      onChange: function(selectedItem){
+        selectedProperty = selectedItem;
+        var selectedImage = availableProperties[selectedItem][asset];
         clippedImage = selectedImage.clip(geometry);
         Map.clear();
-        Map.addLayer(clippedImage, {}, availableProperties[selectedProperty]['nomeExibicao']);
+        Map.addLayer(clippedImage, {}, availableProperties[selectedItem][nomeExibicao]);
       }
     }));
   
@@ -76,11 +78,11 @@ var panelMain = ui.Panel({
     // Definir as opções de exportação
     var exportOptions = {
       image: clippedImage,
-      description: 'SOLO',
+      description: availableProperties[selectedProperty][description],
       region: geometry,
       folder: 'RUBEM_DATA_TOOLKIT',
       fileFormat: 'GeoTIFF',
-      fileNamePrefix: 'solo',
+      fileNamePrefix: availableProperties[selectedProperty][fileNamePrefix],
       scale: 30,
       maxPixels: 2e10
     };
