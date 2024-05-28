@@ -34,21 +34,31 @@ var panelMain = ui.Panel({
   // geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
   
   var availableProperties = {
-    'Areia Fina': raster_areiaf, 
-    'Areia Grossa': raster_areiag, 
-    'KR': raster_kr
+    'AreiaF': {
+      nomeExibicao: 'Areia Fina',
+      asset: raster_areiaf
+    },
+    'AreiaG': {
+      nomeExibicao: 'Areia Grossa',
+      asset: raster_areiag
+    },
+    'KR': {
+      nomeExibicao: 'Coeficiente de Resistência',
+      asset: raster_kr
+    }
   };
-   
+  
+  var clippedImage; 
   propertiesPanel.add(ui.Label('Propriedade do Solo'));
   propertiesPanel.add(ui.Select(
     {
       items: Object.keys(availableProperties),
       placeholder: 'Selecione a propriedade',
       onChange: function(selectedProperty){
-        var selectedImage = availableProperties[selectedProperty];
-        var clipped = selectedImage.clip(geometry);
+        var selectedImage = availableProperties[selectedProperty]['asset'];
+        clippedImage = selectedImage.clip(geometry);
         Map.clear();
-        Map.addLayer(clipped, {}, selectedProperty);
+        Map.addLayer(clippedImage, {}, availableProperties[selectedProperty]['nomeExibicao']);
       }
     }));
   
@@ -59,22 +69,15 @@ var panelMain = ui.Panel({
   // Definir a função de download
   var downloadTasks = function() {
     // Obter os valores de entrada
-    var propertyName = propertiesPanel.widgets().get(1).getValue();    
-    print(propertyName)
-    // var dataset = ee.ImageCollection(collectionName);
-    // var filtered = dataset.filter(ee.Filter.bounds(geometry)).select('DEM');
-    // var image = filtered.reduce(ee.Reducer.max());
-    //var image = selectedImage
-    //var clipped = image.clip(geometry);
 
     // Definir as opções de exportação
     var exportOptions = {
-      image: clipped,
-      description: 'DEM',
+      image: clippedImage,
+      description: 'SOLO',
       region: geometry,
       folder: 'RUBEM_DATA_TOOLKIT',
       fileFormat: 'GeoTIFF',
-      fileNamePrefix: 'demFile',
+      fileNamePrefix: 'solo',
       scale: 30,
       maxPixels: 2e10
     };
