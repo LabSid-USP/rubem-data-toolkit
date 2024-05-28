@@ -60,10 +60,10 @@ var panelMain = ui.Panel({
       placeholder: 'Selecione a propriedade',
       onChange: function(selectedItem){
         selectedProperty = selectedItem;
-        var selectedImage = availableProperties[selectedItem][asset];
+        var selectedImage = availableProperties[selectedItem]['asset'];
         clippedImage = selectedImage.clip(geometry);
         Map.clear();
-        Map.addLayer(clippedImage, {}, availableProperties[selectedItem][nomeExibicao]);
+        Map.addLayer(clippedImage, {}, availableProperties[selectedItem]['nomeExibicao']);
       }
     }));
   
@@ -78,11 +78,11 @@ var panelMain = ui.Panel({
     // Definir as opções de exportação
     var exportOptions = {
       image: clippedImage,
-      description: availableProperties[selectedProperty][description],
+      description: availableProperties[selectedProperty]['description'],
       region: geometry,
       folder: 'RUBEM_DATA_TOOLKIT',
       fileFormat: 'GeoTIFF',
-      fileNamePrefix: availableProperties[selectedProperty][fileNamePrefix],
+      fileNamePrefix: availableProperties[selectedProperty]['fileNamePrefix'],
       scale: 30,
       maxPixels: 2e10
     };
