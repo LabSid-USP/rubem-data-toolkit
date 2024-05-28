@@ -39,11 +39,11 @@ var panelMain = ui.Panel({
     'KR': raster_kr
   };
    
-  propertiesPanel.add(ui.Label('Selecione a propriedade:'));
+  propertiesPanel.add(ui.Label('Propriedade do Solo'));
   propertiesPanel.add(ui.Select(
     {
       items: Object.keys(availableProperties),
-      placeholder: 'Selecione uma opção',
+      placeholder: 'Selecione a propriedade',
       onChange: function(selectedProperty){
         var selectedImage = availableProperties[selectedProperty];
         Map.clear();
