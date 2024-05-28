@@ -34,20 +34,17 @@ var panelMain = ui.Panel({
   // geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
   
   var availableProperties = {
-    'AreiaF': {
-      nomeExibicao: 'Areia Fina',
+    'Fine Sand': {
       description: '',
       fileNamePrefix: '',
       asset: raster_areiaf
     },
-    'AreiaG': {
-      nomeExibicao: 'Areia Grossa',
+    'Coarse Sand': {
       description: '',
       fileNamePrefix: '',      
       asset: raster_areiag
     },
-    'KR': {
-      nomeExibicao: 'Coeficiente de Resistência',
+    'Hydraulic Conductivity': {
       description: '',
       fileNamePrefix: '',      
       asset: raster_kr
