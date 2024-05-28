@@ -14,7 +14,7 @@ var geometry =
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var raster_areiaf = ee.Image("users/gass/rubem-workspace/RASTER_AREIAF");
 var raster_areiag = ee.Image("users/gass/rubem-workspace/RASTER_AREIAG");
-var raster_kr = ee.Image("users/gass/rubem-workspace/RASTER_KR");
+var raster_kr = ee.Image("users/gass/rubem-workspace/RASTER_KR")
 
 // centralizar e adicionar o mapa na área de interesse 
 Map.centerObject(geometry);
@@ -41,15 +41,21 @@ var panelMain = ui.Panel({
   // geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
   
   var availableProperties = {
-    'AreiaF': raster_areiaf, 
-    'AreiaG': raster_areiag, 
+    'Areia Fina': raster_areiaf, 
+    'Areia Grossa': raster_areiag, 
     'KR': raster_kr
   };
    
   propertiesPanel.add(ui.Label('Selecione a propriedade:'));
   propertiesPanel.add(ui.Select(
     {
-      items: Object.keys(availableProperties)
+      items: Object.keys(availableProperties),
+      placeholder: 'Selecione uma opção',
+      onChange: function(selectedProperty){
+        var selectedImage = availableProperties[selectedProperty];
+        
+        Map.addLayer(selectedImage, {}, selectedProperty);
+      }
     }));
   
   // Adicionar painéis à interface do usuário
@@ -64,8 +70,9 @@ var panelMain = ui.Panel({
     // var dataset = ee.ImageCollection(collectionName);
     // var filtered = dataset.filter(ee.Filter.bounds(geometry)).select('DEM');
     // var image = filtered.reduce(ee.Reducer.max());
-    // var clipped = image.clip(geometry);
-    
+    var image = selectedImage
+    var clipped = image.clip(geometry);
+
     // Definir as opções de exportação
     var exportOptions = {
       image: clipped,
