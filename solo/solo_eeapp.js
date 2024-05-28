@@ -1,3 +1,21 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-46.71499113420565, -23.506320833416535],
+          [-46.71499113420565, -23.58185894208125],
+          [-46.59414152483065, -23.58185894208125],
+          [-46.59414152483065, -23.506320833416535]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var raster_areiaf = ee.Image("users/gass/rubem-workspace/RASTER_AREIAF");
+var raster_areiag = ee.Image("users/gass/rubem-workspace/RASTER_AREIAG");
+var raster_kr = ee.Image("users/gass/rubem-workspace/RASTER_KR")
+
 // centralizar e adicionar o mapa na área de interesse 
 Map.centerObject(geometry);
 Map.addLayer(geometry, {color: 'FF0000'}, 'Geometry');
@@ -21,9 +39,18 @@ var panelMain = ui.Panel({
   // geometryPanel.add(ui.Label('Portugues: Desenhe ou insira uma área da aba assets e renomei a variavel `table´ para `geometry´'));
   
   // geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
+  
+  availableProperties = [
+    {'AreiaF': raster_areiaf}, 
+    {'AreiaG': raster_areiag}, 
+    {'KR': raster_kr}
+  ];
    
   propertiesPanel.add(ui.Label('Selecione a propriedade:'));
-  propertiesPanel.add(ui.Select({items: ['COPERNICUS/DEM/GLO30']}));
+  propertiesPanel.add(ui.Select(
+    {
+      items: 
+    }));
   
   // Adicionar painéis à interface do usuário
   panelMain.add(geometryPanel);
@@ -32,8 +59,8 @@ var panelMain = ui.Panel({
   // Definir a função de download
   var downloadTasks = function() {
     // Obter os valores de entrada
-    // var collectionName = propertiesPanel.widgets().get(1).getValue();    
-
+    var propertyName = propertiesPanel.widgets().get(1).getValue();    
+    print(propertyName)
     // var dataset = ee.ImageCollection(collectionName);
     // var filtered = dataset.filter(ee.Filter.bounds(geometry)).select('DEM');
     // var image = filtered.reduce(ee.Reducer.max());
