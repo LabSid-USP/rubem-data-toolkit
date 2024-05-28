@@ -64,8 +64,8 @@ var panelMain = ui.Panel({
     // var dataset = ee.ImageCollection(collectionName);
     // var filtered = dataset.filter(ee.Filter.bounds(geometry)).select('DEM');
     // var image = filtered.reduce(ee.Reducer.max());
-    var image = selectedImage
-    var clipped = image.clip(geometry);
+    //var image = selectedImage
+    //var clipped = image.clip(geometry);
 
     // Definir as opções de exportação
     var exportOptions = {
