@@ -40,11 +40,11 @@ var panelMain = ui.Panel({
   
   // geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
   
-  availableProperties = [
-    {'AreiaF': raster_areiaf}, 
-    {'AreiaG': raster_areiag}, 
-    {'KR': raster_kr}
-  ];
+  availableProperties = {
+    'AreiaF': raster_areiaf, 
+    'AreiaG': raster_areiag, 
+    'KR': raster_kr
+  };
    
   propertiesPanel.add(ui.Label('Selecione a propriedade:'));
   propertiesPanel.add(ui.Select(
