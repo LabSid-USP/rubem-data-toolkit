@@ -46,8 +46,9 @@ var panelMain = ui.Panel({
       placeholder: 'Selecione a propriedade',
       onChange: function(selectedProperty){
         var selectedImage = availableProperties[selectedProperty];
+        var clipped = selectedImage.clip(geometry);
         Map.clear();
-        Map.addLayer(selectedImage, {}, selectedProperty);
+        Map.addLayer(clipped, {}, selectedProperty);
       }
     }));
   
