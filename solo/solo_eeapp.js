@@ -1,12 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
+var geometry = /* color: #d63000 */ee.Geometry.Polygon(
         [[[-46.71499113420565, -23.506320833416535],
           [-46.71499113420565, -23.58185894208125],
           [-46.59414152483065, -23.58185894208125],
@@ -53,7 +46,7 @@ var panelMain = ui.Panel({
       placeholder: 'Selecione uma opção',
       onChange: function(selectedProperty){
         var selectedImage = availableProperties[selectedProperty];
-        
+        Map.clear();
         Map.addLayer(selectedImage, {}, selectedProperty);
       }
     }));
