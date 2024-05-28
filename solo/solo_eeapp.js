@@ -14,7 +14,7 @@ var geometry =
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var raster_areiaf = ee.Image("users/gass/rubem-workspace/RASTER_AREIAF");
 var raster_areiag = ee.Image("users/gass/rubem-workspace/RASTER_AREIAG");
-var raster_kr = ee.Image("users/gass/rubem-workspace/RASTER_KR")
+var raster_kr = ee.Image("users/gass/rubem-workspace/RASTER_KR");
 
 // centralizar e adicionar o mapa na área de interesse 
 Map.centerObject(geometry);
