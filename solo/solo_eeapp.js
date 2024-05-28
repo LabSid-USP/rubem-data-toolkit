@@ -36,14 +36,20 @@ var panelMain = ui.Panel({
   var availableProperties = {
     'AreiaF': {
       nomeExibicao: 'Areia Fina',
+      description: '',
+      fileNamePrefix: '',
       asset: raster_areiaf
     },
     'AreiaG': {
       nomeExibicao: 'Areia Grossa',
+      description: '',
+      fileNamePrefix: '',      
       asset: raster_areiag
     },
     'KR': {
       nomeExibicao: 'Coeficiente de Resistência',
+      description: '',
+      fileNamePrefix: '',      
       asset: raster_kr
     }
   };
