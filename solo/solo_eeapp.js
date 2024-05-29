@@ -1,13 +1,25 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: #d63000 */ee.Geometry.Polygon(
-        [[[-46.71499113420565, -23.506320833416535],
-          [-46.71499113420565, -23.58185894208125],
-          [-46.59414152483065, -23.58185894208125],
-          [-46.59414152483065, -23.506320833416535]]], null, false);
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[-48.59743298334432, -22.00164843259342],
+          [-48.59743298334432, -23.722516993915946],
+          [-45.47731579584432, -23.722516993915946],
+          [-45.47731579584432, -22.00164843259342]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var raster_areiaf = ee.Image("users/gass/rubem-workspace/RASTER_AREIAF");
-var raster_areiag = ee.Image("users/gass/rubem-workspace/RASTER_AREIAG");
-var raster_kr = ee.Image("users/gass/rubem-workspace/RASTER_KR");
+var raster_bulk_density = ee.Image("users/gass/rubem-workspace/Bulk_Density");
+var raster_clay = ee.Image("users/gass/rubem-workspace/Clay");
+var raster_coarse_sand = ee.Image("users/gass/rubem-workspace/Coarse_Sand");
+var raster_field_capacity = ee.Image("users/gass/rubem-workspace/Field_Capacity");
+var raster_fine_sand = ee.Image("users/gass/rubem-workspace/Fine_Sand");
+var raster_organic_matter = ee.Image("users/gass/rubem-workspace/Organic_Matter");
+var raster_porosity = ee.Image("users/gass/rubem-workspace/Porosity");
+var raster_rootzone_depth = ee.Image("users/gass/rubem-workspace/Rootzone_Depth");
+var raster_sat_hydraulic_conductivity = ee.Image("users/gass/rubem-workspace/Sat_Hyd_Conductivity");
+var raster_saturated_content = ee.Image("users/gass/rubem-workspace/Saturated_Content");
+var raster_silt = ee.Image("users/gass/rubem-workspace/Silt");
+var raster_wilting_point = ee.Image("users/gass/rubem-workspace/Wilting_Point");
 
 // centralizar e adicionar o mapa na área de interesse 
 Map.centerObject(geometry);
@@ -34,21 +46,66 @@ var panelMain = ui.Panel({
   // geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
   
   var availableProperties = {
+    'Clay': {
+      description: 'clay',
+      fileNamePrefix: 'clay',
+      asset: raster_clay
+    },   
+    'Porosity': {
+      description: 'porosity',
+      fileNamePrefix: 'porosity',
+      asset: raster_porosity
+    },  
+    'Wilting Point': {
+      description: 'wilting_point',
+      fileNamePrefix: 'wilting_point',
+      asset: raster_wilting_point
+    },      
+    'Rootzone Depth': {
+      description: 'rootzone_depth',
+      fileNamePrefix: 'rootzone_depth',
+      asset: raster_rootzone_depth
+    },      
+    'Bulk Density': {
+      description: 'bulk_density',
+      fileNamePrefix: 'bulk_density',
+      asset: raster_bulk_density
+    },      
+    'Saturated Hydraulic Conductivity': {
+      description: 'sat_hydraulic_conductivity',
+      fileNamePrefix: 'sat_hydraulic_conductivity',
+      asset: raster_sat_hydraulic_conductivity
+    },     
+    'Saturated Content': {
+      description: 'saturated_content',
+      fileNamePrefix: 'saturated_content',
+      asset: raster_saturated_content
+    },      
+    'Organic Matter': {
+      description: 'organic_matter',
+      fileNamePrefix: 'organic_matter',
+      asset: raster_organic_matter
+    },       
+    'Silt': {
+      description: 'silt',
+      fileNamePrefix: 'silt',
+      asset: raster_silt
+    },     
+    'Field Capacity': {
+      description: 'field_capacity',
+      fileNamePrefix: 'field_capacity',
+      asset: raster_field_capacity
+    },         
     'Fine Sand': {
       description: 'fine_sand',
       fileNamePrefix: 'fine_sand',
-      asset: raster_areiaf
+      asset: raster_fine_sand
     },
     'Coarse Sand': {
       description: 'coarse_sand',
       fileNamePrefix: 'coarse_sand',      
-      asset: raster_areiag
+      asset: raster_coarse_sand
     },
-    'Hydraulic Conductivity': {
-      description: 'hydraulic_conductivity',
-      fileNamePrefix: 'hydraulic_conductivity',      
-      asset: raster_kr
-    }
   };
   
   var clippedImage; 
