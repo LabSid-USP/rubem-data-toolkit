@@ -59,7 +59,7 @@ Map.addLayer(geometry, {}, 'Geometry')
 var palette = palettesGeneral.colorbrewer.Blues[7];
 var windVis = {
   min: 0.0,
-  max: 500.0,
+  max: 120.0,
   palette: palette,
 };
 
@@ -86,7 +86,7 @@ var downloadTasks = function() {
 
   
   var pet = pet.map(function(image){
-    return image.multiply(0.001)
+    return image.multiply(0.1)
     .copyProperties(image,['system:time_start','system:time_end']);
   });
   
