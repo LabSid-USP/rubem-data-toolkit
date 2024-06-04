@@ -120,7 +120,7 @@ var downloadTasks = function() {
       crs: 'EPSG:4326',
       type: 'float',
       description: 'imageToDriveExample',
-      scale: 250,
+      scale: 500,
       fileFormat: 'GeoTIFF',
       
     }
@@ -172,7 +172,7 @@ var downloadTasks = function() {
   
   
   // Call the function to create a colorbar legend  
-  var colorBar = createColorBar('Relative Humidity - First Image ', palette, 0, 120)
+  var colorBar = createColorBar('Relative Humidity - First Image ', palette, 0, 100)
   
   Map.add(colorBar)
 };
