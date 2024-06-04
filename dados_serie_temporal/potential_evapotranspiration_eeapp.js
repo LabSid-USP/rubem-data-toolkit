@@ -198,6 +198,7 @@ var downloadTasks = function() {
   return legendPanel
   }
   
+  Map.remove(colorBar)
   // Call the function to create a colorbar legend  
   var colorBar = createColorBar('Potential Evapotranspiration - First Image ', palette, 0, 120)
   
