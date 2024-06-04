@@ -57,8 +57,8 @@ Map.centerObject(geometry, 5)
 Map.addLayer(geometry, {}, 'Geometry')
 
 // Relative Humidity visualization
-var palette = palettesGeneral.colorbrewer.Blues[9];
-var windVis = {
+var palette = palettesGeneral.colorbrewer.Blues[5];
+var hrVis = {
   min: 0.0,
   max: 100.0,
   palette: palette,
@@ -92,7 +92,7 @@ var downloadTasks = function() {
   });
 
 
-  // Plotting chart of monthly Rainfall
+  // Plotting chart of monthly Relative Humidity
   var title = 'Monthly Relative Humidity of Geometry';
   
   // var timeSeries = ui.Chart.image.seriesByRegion({
@@ -114,7 +114,7 @@ var downloadTasks = function() {
   // print(timeSeries);
     
   // Download images for a set region
-  batch.Download.ImageCollection.toDrive(collection, 'Potential Evapotranspiration', 
+  batch.Download.ImageCollection.toDrive(collection, 'Relative Humidity', 
     {
       region: collection,
       crs: 'EPSG:4326',
@@ -127,7 +127,7 @@ var downloadTasks = function() {
   );
   
   // add the first NDVI image to map
-  Map.addLayer(collection, windVis, 'Potential Evapotranspiration');
+  Map.addLayer(collection, hrVis, 'Relative Humidity');
   
   // Add bar Legend
   function createColorBar(titleText, palette, min, max) {
@@ -148,7 +148,7 @@ var downloadTasks = function() {
       bbox: [0, 0, 1, 0.1],
       dimensions: '200x20',
       format: 'png', 
-      min: 0, max: 120,
+      min: 0, max: 100,
       palette: palette
     },
     style: {stretch: 'horizontal', margin: '8px 8px', maxHeight: '40px'},
