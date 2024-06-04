@@ -13,6 +13,8 @@ var geometry =
           [-42.737014975455914, -21.982996657948593],
           [-42.737014975455914, -21.53403972172142]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+//https://earthscience.stackexchange.com/questions/2360/how-do-i-convert-specific-humidity-to-relative-humidity/2361#2361
+
 var batch = require('users/fitoprincipe/geetools:batch')
 var palettesGeneral = require('users/gena/packages:palettes');
 
