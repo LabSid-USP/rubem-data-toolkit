@@ -42,7 +42,7 @@ datePanel.add(ui.Textbox({
 
 
 collectionPanel.add(ui.Label('Selecione a coleção:'));
-collectionPanel.add(ui.Select({items: ['IDAHO_EPSCOR/TERRACLIMATE']}));
+collectionPanel.add(ui.Select({items: ['NASA/FLDAS/NOAH01/C/GL/M/V001']}));
 
 // Adicionar painéis à interface do usuário
 panelMain.add(geometryPanel);
@@ -55,11 +55,11 @@ Map.centerObject(geometry, 5)
 // add Geometry to map
 Map.addLayer(geometry, {}, 'Geometry')
 
-// Wind visualization
-var palette = palettesGeneral.colorbrewer.Blues[7];
+// Relative Humidity visualization
+var palette = palettesGeneral.colorbrewer.Blues[9];
 var windVis = {
   min: 0.0,
-  max: 120.0,
+  max: 100.0,
   palette: palette,
 };
 
@@ -80,49 +80,19 @@ var downloadTasks = function() {
   var dataset = ee.ImageCollection(collectionName)
     .filter(ee.Filter.date(startDate, endDate));
   
-  // Scaled range up to 1
-  var pet = dataset.select('pet');
-  
-  // scaledNDVI = windS
+  var collection = dataset.map(function(image){
+    return ee.Image().expression(
+      '0.263 * p * q * (exp(17.67 * (T - T0) / (T - 29.65))) ** -1', {
+      T: image.select('Tair_f_tavg'),
+      T0: 273.16,
+      p: image.select('Psurf_f_tavg'),
+      q: image.select('Qair_f_tavg')
+    }).float().clip(geometry);
+  });
 
-  
-  var pet = pet.map(function(image){
-    return image.multiply(0.1)
-    .copyProperties(image,['system:time_start','system:time_end']);
-  });
-  
-  
-  var triplets = pet.map(function(image) {
-    var withStats = image.reduceRegions({
-    collection: geometry,
-    reducer: ee.Reducer.mean().setOutputs(['Potential Evapotranspiration']),
-    scale: 250
-    }).map(function(feature) {
-      return feature.set('imageId', image.id())
-    })
-    return withStats
-  }).flatten()
-  
-  // define mean monthly Potential Evapotranspiration 
-  var monthMean = ee.List.sequence(0, diff).map(function(n) {
-    var start = ee.Date(startDate).advance(n, 'month');
-    var end = start.advance(1, 'month');
-    return ee.ImageCollection(pet)
-          .filterDate(start, end)
-          .max()
-          .set('system:time_start', start.millis());
-  });
-  
-  // create image collection from monthly avg
-  var collection = ee.ImageCollection(monthMean);
-  
-  // clip images to the polygon boundary
-  var clippedpet = collection.map(function(image) {
-      return ee.Image(image).clip(geometry)
-    })
-  
+
   // Plotting chart of monthly Rainfall
-  var title = 'Monthly Potential Evapotranspiration of Geometry';
+  var title = 'Monthly Relative Humidity of Geometry';
   
   // var timeSeries = ui.Chart.image.seriesByRegion({
   //     imageCollection: clippedWind,
@@ -143,9 +113,9 @@ var downloadTasks = function() {
   // print(timeSeries);
     
   // Download images for a set region
-  batch.Download.ImageCollection.toDrive(clippedpet, 'Potential Evapotranspiration', 
+  batch.Download.ImageCollection.toDrive(collection, 'Potential Evapotranspiration', 
     {
-      region: clippedpet,
+      region: collection,
       crs: 'EPSG:4326',
       type: 'float',
       description: 'imageToDriveExample',
@@ -156,7 +126,7 @@ var downloadTasks = function() {
   );
   
   // add the first NDVI image to map
-  Map.addLayer(clippedpet, windVis, 'Potential Evapotranspiration');
+  Map.addLayer(collection, windVis, 'Potential Evapotranspiration');
   
   // Add bar Legend
   function createColorBar(titleText, palette, min, max) {
@@ -201,7 +171,7 @@ var downloadTasks = function() {
   
   
   // Call the function to create a colorbar legend  
-  var colorBar = createColorBar('Potential Evapotranspiration - First Image ', palette, 0, 120)
+  var colorBar = createColorBar('Relative Humidity - First Image ', palette, 0, 120)
   
   Map.add(colorBar)
 };
