@@ -28,9 +28,13 @@ var collectionPanel = ui.Panel();
 // Adicionar widgets para entrada de dados
 geometryPanel.add(ui.Label('Desenhe o polígono desejado na área do mapa e nomeie a camada como `geometry`.'));
 datePanel.add(ui.Label('Digite a data inicial:'));
-datePanel.add(ui.Textbox());
+datePanel.add(ui.Textbox({
+    'placeholder': 'yyyy-mm-dd'
+  }));
 datePanel.add(ui.Label('Digite a data final:'));
-datePanel.add(ui.Textbox());
+datePanel.add(ui.Textbox({
+    'placeholder': 'yyyy-mm-dd'
+  }));
 
 collectionPanel.add(ui.Label('Selecione a coleção:'));
 collectionPanel.add(ui.Select({items: ['MODIS/061/MOD13Q1']}));
