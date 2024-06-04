@@ -199,7 +199,7 @@ var downloadTasks = function() {
   }
   
   // Call the function to create a colorbar legend  
-  var colorBar = createColorBar('Potential Evapotranspiration - First Image ', palette, 0, 500)
+  var colorBar = createColorBar('Potential Evapotranspiration - First Image ', palette, 0, 120)
   
   Map.add(colorBar)
 };
