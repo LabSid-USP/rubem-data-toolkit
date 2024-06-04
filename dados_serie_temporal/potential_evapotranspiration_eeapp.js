@@ -1,3 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-43.670852866080914, -21.53403972172142],
+          [-43.670852866080914, -21.982996657948593],
+          [-42.737014975455914, -21.982996657948593],
+          [-42.737014975455914, -21.53403972172142]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var batch = require('users/fitoprincipe/geetools:batch')
 var palettesGeneral = require('users/gena/packages:palettes');
 
@@ -162,7 +176,7 @@ var downloadTasks = function() {
       bbox: [0, 0, 1, 0.1],
       dimensions: '200x20',
       format: 'png', 
-      min: 0, max: 500,
+      min: 0, max: 120,
       palette: palette
     },
     style: {stretch: 'horizontal', margin: '8px 8px', maxHeight: '40px'},
