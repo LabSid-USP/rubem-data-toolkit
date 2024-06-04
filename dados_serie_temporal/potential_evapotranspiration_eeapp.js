@@ -65,6 +65,7 @@ var windVis = {
 
 // Definir a função de download
 var downloadTasks = function() {
+  Map.clear()
   // Obter os valores de entrada
   var startDate = ee.Date(datePanel.widgets().get(1).getValue());
   var endDate = ee.Date(datePanel.widgets().get(3).getValue());
@@ -198,7 +199,7 @@ var downloadTasks = function() {
   return legendPanel
   }
   
-  Map.clear()
+  
   // Call the function to create a colorbar legend  
   var colorBar = createColorBar('Potential Evapotranspiration - First Image ', palette, 0, 120)
   
