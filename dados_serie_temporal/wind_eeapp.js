@@ -2,11 +2,6 @@
 var geometry = 
     /* color: #d63000 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-42.518978289589725, -9.26849628808742],
           [-42.518978289589725, -10.572524341396372],
@@ -33,9 +28,13 @@ var collectionPanel = ui.Panel();
 // Adicionar widgets para entrada de dados
 geometryPanel.add(ui.Label('Desenhe o polígono desejado na área do mapa e nomeie a camada como `geometry`.'));
 datePanel.add(ui.Label('Digite a data inicial:'));
-datePanel.add(ui.Textbox());
+datePanel.add(ui.Textbox({
+    'placeholder': 'yyyy-mm-dd'
+  }));
 datePanel.add(ui.Label('Digite a data final:'));
-datePanel.add(ui.Textbox());
+datePanel.add(ui.Textbox({
+    'placeholder': 'yyyy-mm-dd'
+  }));
 
 collectionPanel.add(ui.Label('Selecione a coleção:'));
 collectionPanel.add(ui.Select({items: ['ECMWF/ERA5_LAND/MONTHLY_BY_HOUR']}));
