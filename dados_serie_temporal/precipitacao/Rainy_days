@@ -1,0 +1,54 @@
+var startDate = ee.Date.fromYMD(2013, 1, 1)
+var endDate = ee.Date.fromYMD(2018, 1, 31) // Exclusive
+var aoi = Map.getBounds(true) // Replace this with your area
+
+var collection = ee.ImageCollection('UCSB-CHG/CHIRPS/DAILY')
+  .filterBounds(aoi)
+
+var numberOfMonths = endDate.difference(startDate, 'months').floor()
+var days_over0Collection = ee.ImageCollection(
+  ee.List.sequence(0, numberOfMonths.subtract(1))
+    .map(days_over0)
+)
+
+print(days_over0Collection)
+Map.addLayer(days_over0Collection, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,white'})
+
+function days_over0(monthOffset) {
+  var date = startDate.advance(monthOffset, 'months')
+  return collection
+    .select('precipitation')
+    .filterDate(date, date.advance(1, 'months'))
+    .map(function (image) {
+      var maskzero = image.gt(0); //Here it keeps all pixels greater than 0.
+      return image.updateMask(maskzero)
+    })
+    .count()
+    .unmask(0)
+    .clip(aoi)
+    .set('date', date.format('yyyy-MM-dd'))
+}
+
+var months = ee.List.sequence(1, 12);
+
+// Group by month, and then reduce within groups by mean();
+// the result is an ImageCollection with one image for each
+// month.
+var byMonth = ee.ImageCollection.fromImages(
+      months.map(function (m) {
+        return days_over0Collection.filter(ee.Filter.calendarRange(m, m, 'month'))
+                    .select(1).mean()
+                    .set('month', m);
+}));
+print(byMonth);
+
+Map.addLayer(ee.Image(byMonth.first()));
+
+print(ui.Chart.image.series({
+  imageCollection: byMonth.select('precipitation'),
+  region: geometry,
+  reducer: ee.Reducer.mean(),
+  scale: 250
+}).setOptions({title: 'Number rainy days over time'}));
+
+
