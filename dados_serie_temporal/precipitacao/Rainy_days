@@ -1,3 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-48.177055536979765, -19.19769327490388],
+          [-48.177055536979765, -21.054376774642378],
+          [-44.419731318229765, -21.054376774642378],
+          [-44.419731318229765, -19.19769327490388]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var startDate = ee.Date.fromYMD(2013, 1, 1)
 var endDate = ee.Date.fromYMD(2018, 1, 31) // Exclusive
 var aoi = Map.getBounds(true) // Replace this with your area
@@ -26,7 +40,7 @@ function days_over0(monthOffset) {
     .count()
     .unmask(0)
     .clip(aoi)
-    .set('date', date.format('yyyy-MM-dd'))
+    .set('system:time_start', startDate.millis());
 }
 
 var months = ee.List.sequence(1, 12);
