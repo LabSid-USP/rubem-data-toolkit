@@ -13,11 +13,10 @@ var geometry =
           [-44.419731318229765, -19.19769327490388]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var startDate = ee.Date.fromYMD(2013, 1, 1)
-var endDate = ee.Date.fromYMD(2018, 1, 31) // Exclusive
-var aoi = Map.getBounds(true) // Replace this with your area
+var endDate = ee.Date.fromYMD(2014, 3, 31) // Exclusive
 
 var collection = ee.ImageCollection('UCSB-CHG/CHIRPS/DAILY')
-  .filterBounds(aoi)
+  .filterBounds(geometry)
 
 var numberOfMonths = endDate.difference(startDate, 'months').floor()
 var days_over0Collection = ee.ImageCollection(
@@ -25,8 +24,8 @@ var days_over0Collection = ee.ImageCollection(
     .map(days_over0)
 )
 
-print(days_over0Collection)
-Map.addLayer(days_over0Collection, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,white'})
+//print(days_over0Collection)
+//Map.addLayer(days_over0Collection, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,white'})
 
 function days_over0(monthOffset) {
   var date = startDate.advance(monthOffset, 'months')
@@ -34,13 +33,16 @@ function days_over0(monthOffset) {
     .select('precipitation')
     .filterDate(date, date.advance(1, 'months'))
     .map(function (image) {
+      var date1 = image.get('system:time_start')
       var maskzero = image.gt(0); //Here it keeps all pixels greater than 0.
-      return image.updateMask(maskzero)
+      return image.updateMask(maskzero).set('system:time_start', date1)
     })
     .count()
     .unmask(0)
-    .clip(aoi)
-    .set('system:time_start', startDate.millis());
+    .clip(geometry)
+    .set('system:time_start', date.millis(), 'dateYMD', date.format('YYYY-MM-dd'))
+    ;
+    
 }
 
 var months = ee.List.sequence(1, 12);
@@ -51,18 +53,25 @@ var months = ee.List.sequence(1, 12);
 var byMonth = ee.ImageCollection.fromImages(
       months.map(function (m) {
         return days_over0Collection.filter(ee.Filter.calendarRange(m, m, 'month'))
-                    .select(1).mean()
-                    .set('month', m);
+                    .select(0).mean()
+                    .set('month', m).set('system:time_start', ee.Date.fromYMD(1, m, 1));
 }));
 print(byMonth);
 
-Map.addLayer(ee.Image(byMonth.first()));
+Map.addLayer(byMonth, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,white'})
 
-print(ui.Chart.image.series({
-  imageCollection: byMonth.select('precipitation'),
-  region: geometry,
-  reducer: ee.Reducer.mean(),
-  scale: 250
-}).setOptions({title: 'Number rainy days over time'}));
+//print(ui.Chart.image.series({
+//  imageCollection: byMonth.select('precipitation'),
+//  region: geometry,
+//  reducer: ee.Reducer.mean(),
+//  scale: 250
+//}).setOptions({title: 'Number rainy days over time'}));
+
+var chart = ui.Chart.image.series(byMonth.select('precipitation'), geometry, ee.Reducer.mean(), 250);
+print(chart); 
+
+
+
+
 
 
