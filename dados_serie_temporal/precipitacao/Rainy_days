@@ -61,7 +61,7 @@ Map.addLayer(byMonth, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,w
 var chart = ui.Chart.image.series(byMonth.select('precipitation'), geometry, ee.Reducer.mean(), 250);
 print(chart); 
 
-// Get Zonal Statistics
+// Image Collection to Feature Collection
 var monthlyRainfall = ee.FeatureCollection(byMonth.map(function (img){
   
   var value = ee.Image(img).reduceRegion(ee.Reducer.mean(),
