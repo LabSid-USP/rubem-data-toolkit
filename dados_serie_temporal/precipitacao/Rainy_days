@@ -65,14 +65,24 @@ var chart = ui.Chart.image.series(byMonth.select('precipitation'), geometry, ee.
 print(chart); 
 
 // Get Zonal Statistics
-var reduced = byMonth.reduceRegions({
-  collection: geometry,
-  reducer: ee.Reducer.mean(),
-  scale: 100,
-});
+var monthlyRainfall = ee.FeatureCollection(byMonth.map(function (img){
+  
+  var value = ee.Image(img).reduceRegion(ee.Reducer.mean(),
+                                         geometry,
+                                         250)
+                            .get('precipitation'); 
+  
+  var month = ee.Image(img).get("month");
+  var year = ee.Image(img).get("year");
+  
+  var date = ee.String(ee.Number(year).int()).cat('_').cat(ee.Number(month).int());
+  
+  return ee.Feature(null).set('precipitation', value)
+                         .set('date', date);
+  
+}));
 
-print(reduced);
-
+print(monthlyRainfall);
 
 
 
