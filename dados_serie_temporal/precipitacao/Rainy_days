@@ -60,17 +60,18 @@ print(byMonth);
 
 Map.addLayer(byMonth, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,white'})
 
-//print(ui.Chart.image.series({
-//  imageCollection: byMonth.select('precipitation'),
-//  region: geometry,
-//  reducer: ee.Reducer.mean(),
-//  scale: 250
-//}).setOptions({title: 'Number rainy days over time'}));
 
 var chart = ui.Chart.image.series(byMonth.select('precipitation'), geometry, ee.Reducer.mean(), 250);
 print(chart); 
 
+// Get Zonal Statistics
+var reduced = byMonth.reduceRegions({
+  collection: geometry,
+  reducer: ee.Reducer.mean(),
+  scale: 100,
+});
 
+print(reduced);
 
 
 
