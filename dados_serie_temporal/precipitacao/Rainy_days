@@ -7,13 +7,13 @@ var geometry =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-48.177055536979765, -19.19769327490388],
-          [-48.177055536979765, -21.054376774642378],
-          [-44.419731318229765, -21.054376774642378],
-          [-44.419731318229765, -19.19769327490388]]], null, false);
+        [[[-43.744843137612634, -22.479360793969324],
+          [-43.744843137612634, -23.046673331521543],
+          [-42.371552121987634, -23.046673331521543],
+          [-42.371552121987634, -22.479360793969324]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var startDate = ee.Date.fromYMD(2013, 1, 1)
-var endDate = ee.Date.fromYMD(2014, 3, 31) // Exclusive
+var startDate = ee.Date.fromYMD(2000, 1, 1)
+var endDate = ee.Date.fromYMD(2021, 12, 31) // Exclusive
 
 var collection = ee.ImageCollection('UCSB-CHG/CHIRPS/DAILY')
   .filterBounds(geometry)
