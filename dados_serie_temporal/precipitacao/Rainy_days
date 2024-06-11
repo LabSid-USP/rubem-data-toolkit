@@ -79,9 +79,7 @@ var monthlyRainfall = ee.FeatureCollection(byMonth.map(function (img){
   
 }));
 
-
-
- Export.table.toDrive({
+Export.table.toDrive({
    collection: monthlyRainfall,
    fileNamePrefix: 'rainy_days',
    fileFormat: 'CSV'});
