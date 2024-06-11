@@ -42,6 +42,9 @@ function days_over0(monthOffset) {
     
 }
 
+
+print(days_over0Collection);
+
 var months = ee.List.sequence(1, 12);
 
 // Group by month, and then reduce within groups by mean();
