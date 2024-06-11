@@ -75,14 +75,19 @@ var monthlyRainfall = ee.FeatureCollection(byMonth.map(function (img){
   var month = ee.Image(img).get("month");
   var year = ee.Image(img).get("year");
   
-  var date = ee.String(ee.Number(year).int()).cat('_').cat(ee.Number(month).int());
+
   
   return ee.Feature(null).set('precipitation', value)
-                         .set('date', date);
+                         
   
 }));
 
 print(monthlyRainfall);
+
+ Export.table.toDrive({
+   collection: monthlyRainfall,
+   fileNamePrefix: 'rainfallbymonth',
+   fileFormat: 'CSV'});
 
 
 
