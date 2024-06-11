@@ -24,9 +24,6 @@ var days_over0Collection = ee.ImageCollection(
     .map(days_over0)
 )
 
-//print(days_over0Collection)
-//Map.addLayer(days_over0Collection, {min: 0, max: 20, palette: 'red,orange,yellow,green,blue,white'})
-
 function days_over0(monthOffset) {
   var date = startDate.advance(monthOffset, 'months')
   return collection
