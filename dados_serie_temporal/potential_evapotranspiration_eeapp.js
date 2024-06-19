@@ -83,7 +83,7 @@ var downloadTasks = function() {
   // Scaled range up to 1
   var pet = dataset.select('pet');
   
-  // scaledNDVI = windS
+  
 
   
   var pet = pet.map(function(image){
