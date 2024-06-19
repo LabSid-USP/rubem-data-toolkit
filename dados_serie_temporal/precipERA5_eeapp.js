@@ -86,7 +86,68 @@ var downloadTasks = function() {
       return ee.Image(image).clip(geometry)
     });
   
+
+//Rainy days
+var numberOfMonths = endDate.difference(startDate, 'months').floor()
+var days_over0Collection = ee.ImageCollection(
+  ee.List.sequence(0, numberOfMonths.subtract(1))
+    .map(days_over0)
+)
+
+function days_over0(monthOffset) {
+  var date = startDate.advance(monthOffset, 'months')
+  return ee.ImageCollection(collectionName)
+    .select('precipitation')
+    .filterDate(date, date.advance(1, 'months'))
+    .map(function (image) {
+      var date1 = image.get('system:time_start')
+      var maskzero = image.gt(0); //Here it keeps all pixels greater than 0.
+      return image.updateMask(maskzero).set('system:time_start', date1)
+    })
+    .count()
+    .unmask(0)
+    .clip(geometry)
+    .set('system:time_start', date.millis(), 'dateYMD', date.format('YYYY-MM-dd'))
+    ;
+    
+}
+
+var months = ee.List.sequence(1, 12);
+
+// Group by month, and then reduce within groups by mean();
+// the result is an ImageCollection with one image for each
+// month.
+var byMonth = ee.ImageCollection.fromImages(
+      months.map(function (m) {
+        return days_over0Collection.filter(ee.Filter.calendarRange(m, m, 'month'))
+                    .select(0).mean()
+                    .set('month', m).set('system:time_start', ee.Date.fromYMD(1, m, 1));
+}));
+
+
+
+
+// Image Collection to Feature Collection
+var monthlyRainfall = ee.FeatureCollection(byMonth.map(function (img){
   
+  var value = ee.Image(img).reduceRegion(ee.Reducer.mean(),
+                                         geometry,
+                                         250)
+                            .get('precipitation'); 
+  
+  var month = ee.Image(img).get("month");
+
+  return ee.Feature(null).set('precipitation', value).set('month', month)
+                         
+  
+}));
+
+Export.table.toDrive({
+   collection: monthlyRainfall,
+   selectors: ['month','precipitation'],
+   fileNamePrefix: 'rainy_days',
+   fileFormat: 'CSV'});
+
   
   // Download images for a set region
   batch.Download.ImageCollection.toDrive(dataset, 'Precipitation', 
