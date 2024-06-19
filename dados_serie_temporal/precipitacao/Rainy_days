@@ -1,24 +1,18 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
+var geometry = /* color: #d63000 */ee.Geometry.Polygon(
         [[[-43.744843137612634, -22.479360793969324],
           [-43.744843137612634, -23.046673331521543],
           [-42.371552121987634, -23.046673331521543],
           [-42.371552121987634, -22.479360793969324]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var startDate = ee.Date.fromYMD(2000, 1, 1)
-var endDate = ee.Date.fromYMD(2021, 12, 31) // Exclusive
+var endDate = ee.Date.fromYMD(2000, 12, 31) // Exclusive
 
 var collection = ee.ImageCollection('UCSB-CHG/CHIRPS/DAILY')
   .filterBounds(geometry)
 
-var numberOfMonths = endDate.difference(startDate, 'months').floor()
+var numberOfMonths = endDate.difference(startDate, 'months').ceil()
+print(numberOfMonths)
 var days_over0Collection = ee.ImageCollection(
   ee.List.sequence(0, numberOfMonths.subtract(1))
     .map(days_over0)
