@@ -78,9 +78,7 @@ var downloadTasks = function() {
   // Scaled range up to 1
   var precp = dataset.select('total_precipitation');
   
-  // scaledNDVI = windS
 
-  
   var precP = precp.map(function(image){
     return image.multiply(0.03042)
     .copyProperties(image,['system:time_start','system:time_end']);
