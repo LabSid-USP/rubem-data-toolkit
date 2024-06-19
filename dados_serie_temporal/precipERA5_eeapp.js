@@ -72,7 +72,7 @@ var downloadTasks = function() {
   
   // define monthly Rainfall 
   var monthSum = ee.List.sequence(0, diff).map(function(n) {
-  var start = ee.Date(startDate).advance(n, 'month');
+  var start = startDate.advance(n, 'month');
   var end = start.advance(1, 'month');
   return ee.ImageCollection(collectionName)
         .filterBounds(geometry)
@@ -88,6 +88,7 @@ var downloadTasks = function() {
   
 
 //Rainy days
+
 var numberOfMonths = endDate.difference(startDate, 'months').floor()
 var days_over0Collection = ee.ImageCollection(
   ee.List.sequence(0, numberOfMonths.subtract(1))
