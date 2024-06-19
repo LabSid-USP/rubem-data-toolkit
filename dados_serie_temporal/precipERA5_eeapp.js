@@ -89,7 +89,7 @@ var downloadTasks = function() {
 
 //Rainy days
 
-var numberOfMonths = endDate.difference(startDate, 'months').floor()
+var numberOfMonths = endDate.difference(startDate, 'months').ceil()
 var days_over0Collection = ee.ImageCollection(
   ee.List.sequence(0, numberOfMonths.subtract(1))
     .map(days_over0)
