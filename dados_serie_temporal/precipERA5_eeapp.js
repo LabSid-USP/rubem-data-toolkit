@@ -38,7 +38,7 @@ datePanel.add(ui.Textbox({
 
 
 collectionPanel.add(ui.Label('Selecione a coleção:'));
-collectionPanel.add(ui.Select({items: ['UCSB-CHG/CHIRPS/PENTAD']}));
+collectionPanel.add(ui.Select({items: ['UCSB-CHG/CHIRPS/DAILY']}));
 
 // Adicionar painéis à interface do usuário
 panelMain.add(geometryPanel);
@@ -74,33 +74,24 @@ var downloadTasks = function() {
   var monthSum = ee.List.sequence(0, diff).map(function(n) {
   var start = ee.Date(startDate).advance(n, 'month');
   var end = start.advance(1, 'month');
-  return ee.ImageCollection("UCSB-CHG/CHIRPS/DAILY")
+  return ee.ImageCollection(collectionName)
+        .filterBounds(geometry)
         .filterDate(start, end)
         .sum()
         .set('system:time_start', start.millis());
 });
 
 // create image collection from monthly sum
-  var dataset = ee.ImageCollection(monthSum);
-  
-  
-  // Scaled range up to 1
-  var precp = dataset.select('precipitation');
-  
-
-  // clip images to the polygon boundary
-  var clippedPrecp = dataset.map(function(image) {
+  var dataset = ee.ImageCollection(monthSum).map(function(image) {
       return ee.Image(image).clip(geometry)
-    })
+    });
   
-  // Plotting chart of monthly Rainfall
-  var title = 'Monthly Precipitation of Geometry';
   
   
   // Download images for a set region
-  batch.Download.ImageCollection.toDrive(clippedPrecp, 'Precipitation', 
+  batch.Download.ImageCollection.toDrive(dataset, 'Precipitation', 
     {
-      region: clippedPrecp,
+      region: geometry,
       crs: 'EPSG:4326',
       type: 'float',
       description: 'imageToDriveExample',
@@ -110,8 +101,8 @@ var downloadTasks = function() {
     }
   );
   
-  // add the first NDVI image to map
-  Map.addLayer(clippedPrecp, windVis, 'Precipitation');
+  // add the first Precipitation image to map
+  Map.addLayer(dataset, windVis, 'Precipitation');
   
   // Add bar Legend
   function createColorBar(titleText, palette, min, max) {
