@@ -38,7 +38,7 @@ datePanel.add(ui.Textbox({
 
 
 collectionPanel.add(ui.Label('Selecione a coleção:'));
-collectionPanel.add(ui.Select({items: ['ECMWF/ERA5/MONTHLY']}));
+collectionPanel.add(ui.Select({items: ['UCSB-CHG/CHIRPS/PENTAD']}));
 
 // Adicionar painéis à interface do usuário
 panelMain.add(geometryPanel);
@@ -70,7 +70,7 @@ var downloadTasks = function() {
   // define the numbers of months between start and end date
   var diff = endDate.difference(startDate, 'month');
   
-  // NDVI
+  
   // collection of images
   var dataset = ee.ImageCollection(collectionName)
     .filter(ee.Filter.date(startDate, endDate));
