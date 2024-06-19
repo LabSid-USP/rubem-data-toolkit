@@ -75,7 +75,7 @@ var downloadTasks = function() {
   // define the numbers of months between start and end date
   var diff = endDate.difference(startDate, 'month');
   
-  // NDVI
+  
   // collection of images
   var dataset = ee.ImageCollection(collectionName)
     .filter(ee.Filter.date(startDate, endDate));
