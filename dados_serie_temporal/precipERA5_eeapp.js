@@ -70,10 +70,21 @@ var downloadTasks = function() {
   // define the numbers of months between start and end date
   var diff = endDate.difference(startDate, 'month');
   
+  // define monthly Rainfall 
+  var monthSum = ee.List.sequence(0, diff).map(function(n) {
+  var start = ee.Date(startDate).advance(n, 'month');
+  var end = start.advance(1, 'month');
+  return ee.ImageCollection("UCSB-CHG/CHIRPS/DAILY")
+        .filterDate(start, end)
+        .sum()
+        .set('system:time_start', start.millis());
+});
+
+// create image collection from monthly sum
+  var dataset = ee.ImageCollection(monthSum);
   
-  // collection of images
-  var dataset = ee.ImageCollection(collectionName)
-    .filter(ee.Filter.date(startDate, endDate));
+  
+
   
   // Scaled range up to 1
   var precp = dataset.select('total_precipitation');
