@@ -84,68 +84,19 @@ var downloadTasks = function() {
   var dataset = ee.ImageCollection(monthSum);
   
   
-
-  
   // Scaled range up to 1
-  var precp = dataset.select('total_precipitation');
+  var precp = dataset.select('precipitation');
   
 
-  var precP = precp.map(function(image){
-    return image.multiply(0.03042)
-    .copyProperties(image,['system:time_start','system:time_end']);
-  });
-  
-  
-  var triplets = precp.map(function(image) {
-    var withStats = image.reduceRegions({
-    collection: geometry,
-    reducer: ee.Reducer.mean().setOutputs(['Precipitation']),
-    scale: 250
-    }).map(function(feature) {
-      return feature.set('imageId', image.id())
-    })
-    return withStats
-  }).flatten()
-  
-  // define mean monthly precipitation 
-  var monthMean = ee.List.sequence(0, diff).map(function(n) {
-    var start = ee.Date(startDate).advance(n, 'month');
-    var end = start.advance(1, 'month');
-    return ee.ImageCollection(precP)
-          .filterDate(start, end)
-          .max()
-          .set('system:time_start', start.millis());
-  });
-  
-  // create image collection from monthly avg
-  var collection = ee.ImageCollection(monthMean);
-  
   // clip images to the polygon boundary
-  var clippedPrecp = collection.map(function(image) {
+  var clippedPrecp = dataset.map(function(image) {
       return ee.Image(image).clip(geometry)
     })
   
   // Plotting chart of monthly Rainfall
   var title = 'Monthly Precipitation of Geometry';
   
-  // var timeSeries = ui.Chart.image.seriesByRegion({
-  //     imageCollection: clippedWind,
-  //     regions: geometry,
-  //     reducer: ee.Reducer.mean(),
-  //     scale: 250,
-  //     xProperty: 'system:time_start',
-  //     seriesProperty: 'label'
-  //   }).setChartType('ScatterChart')
-  //     .setOptions({
-  //       title: title,
-  //       vAxis: {title: '[NDVI]'},
-  //       hAxis: {title: 'Year'},
-  //       lineWidth: 1,
-  //       pointSize: 1,
-  //     });
   
-  // print(timeSeries);
-    
   // Download images for a set region
   batch.Download.ImageCollection.toDrive(clippedPrecp, 'Precipitation', 
     {
