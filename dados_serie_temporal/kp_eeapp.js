@@ -83,7 +83,7 @@ var downloadTasks = function() {
       T0: 273.16,
       p: image.select('Psurf_f_tavg'),
       q: image.select('Qair_f_tavg')
-    }).float().clip(geometry).rename('humidityR');
+    }).float().clip(geometry).rename('humidityRH').copyProperties(image,['system:time_start','system:time_end']);
   });
 
   // WIND COLLECTION
@@ -127,6 +127,10 @@ var filter = ee.Filter.equals({
   rightField: 'system:time_start'
 });
 
+
+//Combined
+
+//var joined= clippedWind.combined(collectionRH)
 // Create the join.
 var simpleJoin = ee.Join.inner();
 
@@ -136,10 +140,10 @@ var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH, f
 var joined = innerJoin.map(function(feature) {
   return ee.Image.cat(feature.get('primary'), feature.get('secondary'));
 });
-
+ print(joined)
 
 //KP computation
-  var collectionKP = innerJoin.map(function(image){
+  var collectionKP = joined.map(function(image){
     return ee.Image().expression(
       '0.482 + 0.024*log(20) - 0.000376*V + 0.0045*RH', {
       V: image.select('windspeed'),
@@ -166,7 +170,7 @@ print(collectionKP)
   );
   
   // add the first NDVI image to map
-  Map.addLayer(collectionKP, hrVis, 'Relative Humidity');
+  Map.addLayer(collectionKP, hrVis, 'kp');
   
   // Add bar Legend
   function createColorBar(titleText, palette, min, max) {
@@ -211,7 +215,7 @@ print(collectionKP)
   
   
   // Call the function to create a colorbar legend  
-  var colorBar = createColorBar('Relative Humidity - First Image ', palette, 0, 100)
+  var colorBar = createColorBar('kp - First Image ', palette, 0, 100)
   
   Map.add(colorBar)
 };
