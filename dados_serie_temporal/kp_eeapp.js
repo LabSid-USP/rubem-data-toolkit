@@ -30,7 +30,6 @@ var panelMain = ui.Panel({
 
 var geometryPanel = ui.Panel();
 var datePanel = ui.Panel();
-var collectionPanel = ui.Panel();
 
 // Adicionar widgets para entrada de dados
 geometryPanel.add(ui.Label('Desenhe o polígono desejado na área do mapa e nomeie a camada como `geometry`.'));
@@ -43,14 +42,9 @@ datePanel.add(ui.Textbox({
     'placeholder': 'yyyy-mm-dd'
   }));
 
-
-collectionPanel.add(ui.Label('Selecione a coleção:'));
-collectionPanel.add(ui.Select({items: ['NASA/FLDAS/NOAH01/C/GL/M/V001']}));
-
 // Adicionar painéis à interface do usuário
 panelMain.add(geometryPanel);
 panelMain.add(datePanel);
-panelMain.add(collectionPanel);
 
 // center map
 Map.centerObject(geometry, 5)
@@ -72,30 +66,79 @@ var downloadTasks = function() {
   // Obter os valores de entrada
   var startDate = ee.Date(datePanel.widgets().get(1).getValue());
   var endDate = ee.Date(datePanel.widgets().get(3).getValue());
-  var collectionName = collectionPanel.widgets().get(1).getValue();
   
   // Selecionar o conjunto de dados
   // define the numbers of months between start and end date
   var diff = endDate.difference(startDate, 'month');
   
-  // NDVI
+  
+  // RELATIVE HUMIDITY COLLECTION
   // collection of images
-  var dataset = ee.ImageCollection(collectionName)
+  var datasetRH = ee.ImageCollection('NASA/FLDAS/NOAH01/C/GL/M/V001')
     .filter(ee.Filter.date(startDate, endDate));
   
-  var collection = dataset.map(function(image){
+  var collectionRH = datasetRH.map(function(image){
     return ee.Image().expression(
       '0.263 * p * q * (exp(17.67 * (T - T0) / (T - 29.65))) ** -1', {
       T: image.select('Tair_f_tavg'),
       T0: 273.16,
       p: image.select('Psurf_f_tavg'),
       q: image.select('Qair_f_tavg')
-    }).float().clip(geometry);
+    }).float().clip(geometry).rename('humidityR');
   });
 
+  // WIND COLLECTION
+  var datasetWD = ee.ImageCollection('ECMWF/ERA5_LAND/MONTHLY_BY_HOUR')
+    .filter(ee.Filter.date(startDate, endDate));
+  
+  // Scaled range up to 1
+  var wind = datasetWD.select('u_component_of_wind_10m','v_component_of_wind_10m');
+  
+  // wind vector
+  var windS = wind.map(function(image){
+     var wind_10m = image.expression(
+    'sqrt(u**2 + v**2)', {
+      'u': image.select('u_component_of_wind_10m'),
+      'v': image.select('v_component_of_wind_10m'),
+  }).rename('windspeed');
+  var time = image.get('system:time_start');
+  return wind_10m.set('system:time_start', time) } );
+  
+  // define mean monthly windspeed 
+  var monthMean = ee.List.sequence(0, diff).map(function(n) {
+    var start = ee.Date(startDate).advance(n, 'month');
+    var end = start.advance(1, 'month');
+    return ee.ImageCollection(windS)
+          .filterDate(start, end)
+          .mean()
+          .set('system:time_start', start.millis());
+  });
+  
+  // create image collection from monthly avg
+  var collection = ee.ImageCollection(monthMean);
+  
+  // clip images to the polygon boundary
+  var clippedWind = collection.map(function(image) {
+      return ee.Image(image).clip(geometry)
+    })
+
+// Create the join.
+var simpleJoin = ee.Join.inner();
+
+// Inner join
+var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH));
+
+//KP computation
+  var collectionKP = innerJoin.map(function(image){
+    return ee.Image().expression(
+      '0.482 + 0.024*log(20) - 0.000376*V + 0.0045*RH', {
+      V: image.select('windspeed'),
+      RH: image.select('humidityRH')
+    }).float().rename('kp');
+  });
 
   // Plotting chart of monthly Relative Humidity
-  var title = 'Monthly Relative Humidity of Geometry';
+  var title = 'Monthly KP';
   
   // var timeSeries = ui.Chart.image.seriesByRegion({
   //     imageCollection: clippedWind,
