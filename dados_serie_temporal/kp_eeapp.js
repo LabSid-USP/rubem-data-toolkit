@@ -128,9 +128,6 @@ var filter = ee.Filter.equals({
 });
 
 
-//Combined
-
-//var joined= clippedWind.combined(collectionRH)
 // Create the join.
 var simpleJoin = ee.Join.inner();
 
@@ -140,7 +137,7 @@ var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH, f
 var joined = innerJoin.map(function(feature) {
   return ee.Image.cat(feature.get('primary'), feature.get('secondary'));
 });
- print(joined)
+ 
 
 //KP computation
   var collectionKP = joined.map(function(image){
@@ -151,13 +148,13 @@ var joined = innerJoin.map(function(feature) {
     }).float().rename('kp');
   });
 
-print(collectionKP)
+
   // Plotting chart of monthly Relative Humidity
   var title = 'Monthly KP';
   
  
   // Download images for a set region
-  batch.Download.ImageCollection.toDrive(collectionKP, 'Relative Humidity', 
+  batch.Download.ImageCollection.toDrive(collectionKP, 'Monthly KP', 
     {
       region: geometry,
       crs: 'EPSG:4326',
