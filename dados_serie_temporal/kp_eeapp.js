@@ -1,17 +1,16 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-43.670852866080914, -21.53403972172142],
-          [-43.670852866080914, -21.982996657948593],
-          [-42.737014975455914, -21.982996657948593],
-          [-42.737014975455914, -21.53403972172142]]], null, false);
+        [[[-43.7642366551437, -21.487769028819383],
+          [-43.7642366551437, -22.04892569968417],
+          [-42.6216585301437, -22.04892569968417],
+          [-42.6216585301437, -21.487769028819383]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 ///https://earthscience.stackexchange.com/questions/2360/how-do-i-convert-specific-humidity-to-relative-humidity/2361#2361
 
@@ -122,11 +121,22 @@ var downloadTasks = function() {
       return ee.Image(image).clip(geometry)
     })
 
+
+var filter = ee.Filter.equals({
+  leftField: 'system:time_start',
+  rightField: 'system:time_start'
+});
+
 // Create the join.
 var simpleJoin = ee.Join.inner();
 
 // Inner join
-var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH));
+var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH, filter));
+
+var joined = innerJoin.map(function(feature) {
+  return ee.Image.cat(feature.get('primary'), feature.get('secondary'));
+});
+
 
 //KP computation
   var collectionKP = innerJoin.map(function(image){
@@ -137,31 +147,15 @@ var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH));
     }).float().rename('kp');
   });
 
+print(collectionKP)
   // Plotting chart of monthly Relative Humidity
   var title = 'Monthly KP';
   
-  // var timeSeries = ui.Chart.image.seriesByRegion({
-  //     imageCollection: clippedWind,
-  //     regions: geometry,
-  //     reducer: ee.Reducer.mean(),
-  //     scale: 250,
-  //     xProperty: 'system:time_start',
-  //     seriesProperty: 'label'
-  //   }).setChartType('ScatterChart')
-  //     .setOptions({
-  //       title: title,
-  //       vAxis: {title: '[NDVI]'},
-  //       hAxis: {title: 'Year'},
-  //       lineWidth: 1,
-  //       pointSize: 1,
-  //     });
-  
-  // print(timeSeries);
-    
+ 
   // Download images for a set region
-  batch.Download.ImageCollection.toDrive(collection, 'Relative Humidity', 
+  batch.Download.ImageCollection.toDrive(collectionKP, 'Relative Humidity', 
     {
-      region: collection,
+      region: geometry,
       crs: 'EPSG:4326',
       type: 'float',
       description: 'imageToDriveExample',
@@ -172,7 +166,7 @@ var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH));
   );
   
   // add the first NDVI image to map
-  Map.addLayer(collection, hrVis, 'Relative Humidity');
+  Map.addLayer(collectionKP, hrVis, 'Relative Humidity');
   
   // Add bar Legend
   function createColorBar(titleText, palette, min, max) {
