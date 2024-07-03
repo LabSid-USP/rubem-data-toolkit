@@ -51,20 +51,19 @@ var imageUrl = 'https://labsid.poli.usp.br/wp-content/uploads/sites/1206/2019/06
 var imagePanel = ui.Panel({
     widgets: [
         ui.Label({
-            value: 'Imagem da Internet',
+            value: 'RUBEM TOOLKIT: TERRENO - DEM',
             style: {fontWeight: 'bold', fontSize: '16px'}
         }),
-        ui.Panel({
-            style: {
-              //backgroundImage: 'url(' + imageUrl + ')',
-              //backgroundSize: 'contain',
-                width: '200px',
-                height: '200px'
-            }
+        ui.Thumbnail({
+            image: ee.Image.load(imageUrl),
+            params: {
+                dimensions: '360x110'
+            },
+            style: {stretch: 'both'}
         })
     ],
     style: {
-        padding: '1x'
+        padding: '20xp'
     }
 });
 
