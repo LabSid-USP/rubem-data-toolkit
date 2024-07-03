@@ -13,6 +13,9 @@ var geometry =
           [-104.16484375, 40.43415242959552]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // RUBEM ToolKit dataset input process
+// 
+// Digital Terrain Elevation (DEM)
+//
 // Distributed hydrological model
 // https://doi.org/10.3390/w14121958
 // Documentation and tutorials: 
