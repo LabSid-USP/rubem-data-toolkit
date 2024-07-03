@@ -57,13 +57,13 @@ var imagePanel = ui.Panel({
         ui.Thumbnail({
             image: ee.Image.load(imageUrl),
             params: {
-                dimensions: '200x200'
+                dimensions: '180x55'
             },
             style: {stretch: 'both'}
         })
     ],
     style: {
-        padding: '10px'
+        padding: '20xp'
     }
 });
 
