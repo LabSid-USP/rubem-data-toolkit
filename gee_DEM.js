@@ -5,6 +5,13 @@ var geometry = /* color: #98ff00 */ee.Geometry.Polygon(
           [-46.697812835487625, -23.947960284540397],
           [-46.697812835487625, -22.778062290756594]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// RUBEM ToolKit dataset input process
+// Distributed hydrological model
+// https://doi.org/10.3390/w14121958
+// Documentation and tutorials: 
+// https://rubem-hydrological.readthedocs.io/en/latest/
+// *youtube link*
+
 ee.ImageCollection("COPERNICUS/DEM/GLO30");
 
 //should be define the geometry by the user.
