@@ -63,7 +63,7 @@ var imagePanel = ui.Panel({
         })
     ],
     style: {
-        padding: '20xp'
+        padding: '10xp'
     }
 });
 
@@ -97,7 +97,7 @@ var imagePanel = ui.Panel({
       image: clipped,
       description: 'DEM',
       region: geometry,
-      folder: 'RUBEM_DATA_TOOLKIT',
+      folder: 'RUBEM/INPUT/DEM',
       fileFormat: 'GeoTIFF',
       fileNamePrefix: 'demFile',
       scale: 30,
