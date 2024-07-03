@@ -17,7 +17,7 @@ var geometry =
 var batch = require('users/fitoprincipe/geetools:batch')
 var palettesGeneral = require('users/gena/packages:palettes');
 
-// Criar painéis para entrada de dados/
+// Create panels for data entry
 var panelMain = ui.Panel({
   'layout': ui.Panel.Layout.flow('vertical'),
   'style': {
@@ -30,7 +30,7 @@ var panelMain = ui.Panel({
 var geometryPanel = ui.Panel();
 var datePanel = ui.Panel();
 
-// Adicionar widgets para entrada de dados
+// Add widgets for data entry
 geometryPanel.add(ui.Label('Desenhe o polígono desejado na área do mapa e nomeie a camada como `geometry`.'));
 datePanel.add(ui.Label('Digite a data inicial:'));
 datePanel.add(ui.Textbox({
@@ -41,7 +41,7 @@ datePanel.add(ui.Textbox({
     'placeholder': 'yyyy-mm-dd'
   }));
 
-// Adicionar painéis à interface do usuário
+// Add panels to the user interface
 panelMain.add(geometryPanel);
 panelMain.add(datePanel);
 
@@ -66,11 +66,11 @@ var downloadTasks = function() {
   var startDate = ee.Date(datePanel.widgets().get(1).getValue());
   var endDate = ee.Date(datePanel.widgets().get(3).getValue());
   
-  // define the numbers of months between start and end date
+  // Define the numbers of months between start and end date
   var diff = endDate.difference(startDate, 'month');
   
   
-  // RELATIVE HUMIDITY COLLECTION
+  // RELATIVE HUMIDITY Collection
 
   var datasetRH = ee.ImageCollection('NASA/FLDAS/NOAH01/C/GL/M/V001')
     .filter(ee.Filter.date(startDate, endDate));
@@ -85,7 +85,7 @@ var downloadTasks = function() {
     }).float().clip(geometry).rename('humidityRH').copyProperties(image,['system:time_start','system:time_end']);
   });
 
-  // WIND COLLECTION
+  // WIND Collection
   var datasetWD = ee.ImageCollection('ECMWF/ERA5_LAND/MONTHLY_BY_HOUR')
     .filter(ee.Filter.date(startDate, endDate));
   
@@ -216,7 +216,7 @@ var joined = innerJoin.map(function(feature) {
   Map.add(colorBar)
 };
 
-// Adicionar um botão para iniciar o download
+//Add a button to start the download
 panelMain.add(ui.Button('Iniciar download', downloadTasks));
 
 ui.root.add(panelMain);
