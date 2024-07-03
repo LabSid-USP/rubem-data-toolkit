@@ -51,28 +51,27 @@ Map.centerObject(geometry, 5)
 // add Geometry to map
 Map.addLayer(geometry, {}, 'Geometry')
 
-// Relative Humidity visualization
-var palette = palettesGeneral.colorbrewer.Blues[5];
-var hrVis = {
-  min: 0.0,
-  max: 100.0,
-  palette: palette,
-};
+// Result visualization
+ var palette = palettesGeneral.colorbrewer.Blues[5];
+ var hrVis = {
+   min: 0.0,
+   max: 100.0,
+   palette: palette,
+ };
 
-// Definir a função de download
+// Download task
 var downloadTasks = function() {
   Map.clear()
-  // Obter os valores de entrada
+  // Get input dates
   var startDate = ee.Date(datePanel.widgets().get(1).getValue());
   var endDate = ee.Date(datePanel.widgets().get(3).getValue());
   
-  // Selecionar o conjunto de dados
   // define the numbers of months between start and end date
   var diff = endDate.difference(startDate, 'month');
   
   
   // RELATIVE HUMIDITY COLLECTION
-  // collection of images
+
   var datasetRH = ee.ImageCollection('NASA/FLDAS/NOAH01/C/GL/M/V001')
     .filter(ee.Filter.date(startDate, endDate));
   
@@ -90,10 +89,10 @@ var downloadTasks = function() {
   var datasetWD = ee.ImageCollection('ECMWF/ERA5_LAND/MONTHLY_BY_HOUR')
     .filter(ee.Filter.date(startDate, endDate));
   
-  // Scaled range up to 1
+     // Scaled range up to 1
   var wind = datasetWD.select('u_component_of_wind_10m','v_component_of_wind_10m');
   
-  // wind vector
+     // wind vector
   var windS = wind.map(function(image){
      var wind_10m = image.expression(
     'sqrt(u**2 + v**2)', {
@@ -103,7 +102,7 @@ var downloadTasks = function() {
   var time = image.get('system:time_start');
   return wind_10m.set('system:time_start', time) } );
   
-  // define mean monthly windspeed 
+    // define mean monthly windspeed 
   var monthMean = ee.List.sequence(0, diff).map(function(n) {
     var start = ee.Date(startDate).advance(n, 'month');
     var end = start.advance(1, 'month');
@@ -113,7 +112,7 @@ var downloadTasks = function() {
           .set('system:time_start', start.millis());
   });
   
-  // create image collection from monthly avg
+    // create image collection from monthly avg
   var collection = ee.ImageCollection(monthMean);
   
   // clip images to the polygon boundary
@@ -128,10 +127,10 @@ var filter = ee.Filter.equals({
 });
 
 
-// Create the join.
+// Create the join RELATIVE HUMIDITY and WIND.
 var simpleJoin = ee.Join.inner();
 
-// Inner join
+  // Inner join
 var innerJoin = ee.ImageCollection(simpleJoin.apply(clippedWind, collectionRH, filter));
 
 var joined = innerJoin.map(function(feature) {
@@ -139,7 +138,7 @@ var joined = innerJoin.map(function(feature) {
 });
  
 
-//KP computation
+//KP computation (Snyder (1992) with fetch distance around the pan = 20m) 
   var collectionKP = joined.map(function(image){
     return ee.Image().expression(
       '0.482 + 0.024*log(20) - 0.000376*V + 0.0045*RH', {
@@ -166,7 +165,7 @@ var joined = innerJoin.map(function(feature) {
     }
   );
   
-  // add the first NDVI image to map
+  // add the first kp image to map
   Map.addLayer(collectionKP, hrVis, 'kp');
   
   // Add bar Legend
