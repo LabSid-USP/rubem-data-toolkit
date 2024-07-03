@@ -51,7 +51,7 @@ var imageUrl = 'https://rubem-hydrological.readthedocs.io/en/latest/_static/bann
 var imagePanel = ui.Panel({
     widgets: [
         ui.Label({
-            value: 'Imagem da Internet',
+            value: 'RUBEM TOOLKIT: TERRENO - DEM',
             style: {fontWeight: 'bold', fontSize: '16px'}
         }),
         ui.Thumbnail({
