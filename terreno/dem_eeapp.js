@@ -47,30 +47,29 @@ var panelMain = ui.Panel({
   var collectionPanel = ui.Panel();
   
 // imagem do painel
-var imageUrl = 'https://rubem-hydrological.readthedocs.io/en/latest/_static/banner.png';
+var imageUrl = 'https://labsid.poli.usp.br/wp-content/uploads/sites/1206/2019/06/LogoLabSid.svg'
 var imagePanel = ui.Panel({
     widgets: [
         ui.Label({
-            value: 'RUBEM TOOLKIT: TERRENO - DEM',
+            value: 'Imagem da Internet',
             style: {fontWeight: 'bold', fontSize: '16px'}
         }),
-        ui.Thumbnail({
-            image: ee.Image.load(imageUrl),
-            params: {
-                dimensions: '180x55'
-            },
-            style: {stretch: 'both'}
+        ui.Panel({
+            style: {
+              //backgroundImage: 'url(' + imageUrl + ')',
+              //backgroundSize: 'contain',
+                width: '200px',
+                height: '200px'
+            }
         })
     ],
     style: {
-        padding: '20xp'
+        padding: '1x'
     }
 });
 
   // Adicionar widgets para entrada de dados
 
-  geometryPanel.add(ui.Label('RUBEM TOOLKIT: TERRENO - DEM'));
-  
   geometryPanel.add(ui.Label('Portugues: Desenhe ou insira uma área da aba assets e renomei a variavel `table´ para `geometry´'));
   
   geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
