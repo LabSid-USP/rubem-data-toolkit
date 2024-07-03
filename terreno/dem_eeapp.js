@@ -46,19 +46,28 @@ var panelMain = ui.Panel({
   var geometryPanel = ui.Panel();
   var collectionPanel = ui.Panel();
   
-var table = ui.Chart(
-[
-  ['<h2>Test Title</h2>'],
-  ['<img src=https://rubem-hydrological.readthedocs.io/en/latest/_static/banner.png width=150px>']
-],
-'Table', {allowHtml: true});
+// imagem do painel
+var imageUrl = 'https://rubem-hydrological.readthedocs.io/en/latest/_static/banner.png';
+var imagePanel = ui.Panel({
+    widgets: [
+        ui.Label({
+            value: 'Imagem da Internet',
+            style: {fontWeight: 'bold', fontSize: '16px'}
+        }),
+        ui.Thumbnail({
+            image: ee.Image.load(imageUrl),
+            params: {
+                dimensions: '200x200'
+            },
+            style: {stretch: 'both'}
+        })
+    ],
+    style: {
+        padding: '10px'
+    }
+});
 
   // Adicionar widgets para entrada de dados
-
-var titlePanel = ui.Panel([table], 'flow', {width: '150px', padding: '8px'});
-ui.root.insert(0, titlePanel);
-
- geometryPanel.add(ui.Label(titlePanel));
 
   geometryPanel.add(ui.Label('RUBEM TOOLKIT: TERRENO - DEM'));
   
@@ -67,9 +76,11 @@ ui.root.insert(0, titlePanel);
   geometryPanel.add(ui.Label('English: Draw or insert your asset of the area named as `geometry´'));
    
   collectionPanel.add(ui.Label('Selecione o sensor (select the sensor):'));
+  
   collectionPanel.add(ui.Select({items: ['COPERNICUS/DEM/GLO30']}));
   
   // Adicionar painéis à interface do usuário
+  panelMain.add(imagePanel);
   panelMain.add(geometryPanel);
   panelMain.add(collectionPanel);
   
