@@ -46,7 +46,20 @@ var panelMain = ui.Panel({
   var geometryPanel = ui.Panel();
   var collectionPanel = ui.Panel();
   
+var table = ui.Chart(
+[
+  ['<h2>Test Title</h2>'],
+  ['<img src=https://rubem-hydrological.readthedocs.io/en/latest/_static/banner.png width=150px>']
+],
+'Table', {allowHtml: true});
+
   // Adicionar widgets para entrada de dados
+
+var titlePanel = ui.Panel([table], 'flow', {width: '150px', padding: '8px'});
+ui.root.insert(0, titlePanel);
+
+ geometryPanel.add(ui.Label(titlePanel));
+
   geometryPanel.add(ui.Label('RUBEM TOOLKIT: TERRENO - DEM'));
   
   geometryPanel.add(ui.Label('Portugues: Desenhe ou insira uma área da aba assets e renomei a variavel `table´ para `geometry´'));
