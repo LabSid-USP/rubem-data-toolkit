@@ -8,18 +8,18 @@ var geometry =
           [-45.47731579584432, -23.722516993915946],
           [-45.47731579584432, -22.00164843259342]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var raster_bulk_density = ee.Image("users/gass/rubem-workspace/Bulk_Density");
-var raster_clay = ee.Image("users/gass/rubem-workspace/Clay");
-var raster_coarse_sand = ee.Image("users/gass/rubem-workspace/Coarse_Sand");
-var raster_field_capacity = ee.Image("users/gass/rubem-workspace/Field_Capacity");
-var raster_fine_sand = ee.Image("users/gass/rubem-workspace/Fine_Sand");
-var raster_organic_matter = ee.Image("users/gass/rubem-workspace/Organic_Matter");
-var raster_porosity = ee.Image("users/gass/rubem-workspace/Porosity");
-var raster_rootzone_depth = ee.Image("users/gass/rubem-workspace/Rootzone_Depth");
-var raster_sat_hydraulic_conductivity = ee.Image("users/gass/rubem-workspace/Sat_Hyd_Conductivity");
-var raster_saturated_content = ee.Image("users/gass/rubem-workspace/Saturated_Content");
-var raster_silt = ee.Image("users/gass/rubem-workspace/Silt");
-var raster_wilting_point = ee.Image("users/gass/rubem-workspace/Wilting_Point");
+var raster_bulk_density = ee.Image("projects/rubem-workspace-462117/assets/soil/Bulk_Density");
+var raster_clay = ee.Image("projects/rubem-workspace-462117/assets/soil/Clay");
+var raster_coarse_sand = ee.Image("projects/rubem-workspace-462117/assets/soil/Coarse_Sand");
+var raster_field_capacity = ee.Image("projects/rubem-workspace-462117/assets/soil/Field_Capacity");
+var raster_fine_sand = ee.Image("projects/rubem-workspace-462117/assets/soil/Fine_Sand");
+var raster_organic_matter = ee.Image("projects/rubem-workspace-462117/assets/soil/Organic_Matter");
+var raster_porosity = ee.Image("projects/rubem-workspace-462117/assets/soil/Porosity");
+var raster_rootzone_depth = ee.Image("projects/rubem-workspace-462117/assets/soil/Rootzone_Depth");
+var raster_sat_hydraulic_conductivity = ee.Image("projects/rubem-workspace-462117/assets/soil/Sat_Hyd_Conductivity");
+var raster_saturated_content = ee.Image("projects/rubem-workspace-462117/assets/soil/Saturated_Content");
+var raster_silt = ee.Image("projects/rubem-workspace-462117/assets/soil/Silt");
+var raster_wilting_point = ee.Image("projects/rubem-workspace-462117/assets/soil/Wilting_Point");
 
 // centralizar e adicionar o mapa na área de interesse 
 Map.centerObject(geometry);
